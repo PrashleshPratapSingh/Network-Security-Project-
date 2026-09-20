@@ -15,6 +15,7 @@ Add team member details here:
 - Member 2
 - Member 3
 - Member 4
+- Member 5 
 
 ## Approach Summary
 - **`approach1-signature/`**: Rules/signature based detection pipeline and experiments.
