@@ -1,0 +1,12 @@
+# Approach 1 — Signature-Based NIDS Dependencies
+# Install all (Arch Linux):
+#   sudo pacman -S python-scapy python-matplotlib python-seaborn python-numpy
+#
+# Or via pip (other distros):
+#   pip install scapy matplotlib seaborn numpy psutil
+
+scapy>=2.5.0          # Live packet capture + PCAP reading
+psutil>=5.9.0         # CPU/memory usage monitoring (already installed)
+matplotlib>=3.7.0     # Chart generation for results
+seaborn>=0.12.0       # Heatmaps and styled charts
+numpy>=1.24.0         # Matrix operations for confusion matrix

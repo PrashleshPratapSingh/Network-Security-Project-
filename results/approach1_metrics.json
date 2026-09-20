@@ -1,0 +1,19 @@
+{
+  "total_packets": 300,
+  "total_alerts": 147,
+  "true_positives": 97,
+  "false_positives": 50,
+  "true_negatives": 118,
+  "false_negatives": 35,
+  "accuracy": 71.67,
+  "precision": 65.99,
+  "recall_detection_rate": 73.48,
+  "f1_score": 0.6953,
+  "false_positive_rate": 29.76,
+  "severity_counts": {
+    "HIGH": 72,
+    "MEDIUM": 75,
+    "LOW": 0
+  },
+  "generated_at": "2026-09-20 23:44:43"
+}
