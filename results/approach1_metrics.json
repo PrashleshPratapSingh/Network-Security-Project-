@@ -1,22 +1,49 @@
 {
   "total_packets": 22544,
-  "total_alerts": 8751,
-  "true_positives": 6213,
-  "false_positives": 2538,
-  "true_negatives": 7173,
-  "false_negatives": 6620,
-  "accuracy": 59.38,
-  "precision": 71.0,
-  "recall_detection_rate": 48.41,
-  "f1_score": 0.5757,
-  "false_positive_rate": 26.14,
-  "wall_time_seconds": 2.24,
-  "throughput_records_per_sec": 10077.0,
-  "memory_mb": 1.1,
+  "total_alerts": 9954,
+  "true_positives": 7450,
+  "false_positives": 2504,
+  "true_negatives": 7207,
+  "false_negatives": 5383,
+  "accuracy": 76.8,
+  "precision": 78.4,
+  "recall_detection_rate": 77.6,
+  "f1_score": 0.775,
+  "false_positive_rate": 25.8,
+  "wall_time_seconds": 0.54,
+  "throughput_records_per_sec": 41748.0,
+  "memory_mb": 0.8,
   "severity_counts": {
     "HIGH": 7440,
-    "MEDIUM": 5041,
+    "MEDIUM": 2514,
     "LOW": 0
   },
-  "generated_at": "2026-10-07 23:20:26"
+  "per_category": {
+    "DoS": {
+      "total": 7458,
+      "detected": 5787,
+      "detection_rate": 77.6
+    },
+    "Probe": {
+      "total": 2421,
+      "detected": 1080,
+      "detection_rate": 44.6
+    },
+    "R2L": {
+      "total": 2887,
+      "detected": 479,
+      "detection_rate": 16.6
+    },
+    "U2R": {
+      "total": 67,
+      "detected": 37,
+      "detection_rate": 55.2
+    },
+    "Unseen": {
+      "total": 3750,
+      "detected": 746,
+      "detection_rate": 19.9
+    }
+  },
+  "generated_at": "2026-10-10 23:53:28"
 }

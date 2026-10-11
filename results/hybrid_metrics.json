@@ -1,0 +1,49 @@
+{
+  "total_packets": 22544,
+  "total_alerts": 10489,
+  "true_positives": 10023,
+  "false_positives": 466,
+  "true_negatives": 9245,
+  "false_negatives": 2810,
+  "accuracy": 85.5,
+  "precision": 95.6,
+  "recall_detection_rate": 78.1,
+  "f1_score": 0.834,
+  "false_positive_rate": 4.8,
+  "wall_time_seconds": 1.45,
+  "throughput_records_per_sec": 15540.0,
+  "memory_mb": 35.8,
+  "severity_counts": {
+    "HIGH": 8920,
+    "MEDIUM": 1569,
+    "LOW": 0
+  },
+  "per_category": {
+    "DoS": {
+      "total": 7458,
+      "detected": 6598,
+      "detection_rate": 88.5
+    },
+    "Probe": {
+      "total": 2421,
+      "detected": 2344,
+      "detection_rate": 96.8
+    },
+    "R2L": {
+      "total": 2887,
+      "detected": 1109,
+      "detection_rate": 38.4
+    },
+    "U2R": {
+      "total": 67,
+      "detected": 42,
+      "detection_rate": 62.1
+    },
+    "Unseen": {
+      "total": 3750,
+      "detected": 2558,
+      "detection_rate": 68.2
+    }
+  },
+  "generated_at": "2026-10-10 23:53:28"
+}

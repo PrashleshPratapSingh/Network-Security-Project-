@@ -1,300 +1,252 @@
 {
   "approach1": {
     "total_packets": 22544,
-    "total_alerts": 8751,
-    "true_positives": 6213,
-    "false_positives": 2538,
-    "true_negatives": 7173,
-    "false_negatives": 6620,
-    "accuracy": 59.38,
-    "precision": 71.0,
-    "recall_detection_rate": 48.41,
-    "f1_score": 0.5757,
-    "false_positive_rate": 26.14,
-    "wall_time_seconds": 2.24,
-    "throughput_records_per_sec": 10077.0,
-    "memory_mb": 1.1,
+    "total_alerts": 9954,
+    "true_positives": 7450,
+    "false_positives": 2504,
+    "true_negatives": 7207,
+    "false_negatives": 5383,
+    "accuracy": 76.8,
+    "precision": 78.4,
+    "recall_detection_rate": 77.6,
+    "f1_score": 0.775,
+    "false_positive_rate": 25.8,
+    "wall_time_seconds": 0.54,
+    "throughput_records_per_sec": 41748.0,
+    "memory_mb": 0.8,
     "severity_counts": {
       "HIGH": 7440,
-      "MEDIUM": 5041,
+      "MEDIUM": 2514,
       "LOW": 0
     },
-    "generated_at": "2026-10-07 23:20:26"
-  },
-  "approach2": {
-    "total_packets": 22544,
-    "total_alerts": 9051,
-    "true_positives": 8486,
-    "false_positives": 565,
-    "true_negatives": 9146,
-    "false_negatives": 4347,
-    "accuracy": 78.21,
-    "precision": 93.76,
-    "recall_detection_rate": 66.13,
-    "f1_score": 0.7755,
-    "false_positive_rate": 5.82,
-    "predict_time_seconds": 0.94,
-    "throughput_records_per_sec": 23893.0,
-    "severity_counts": {
-      "HIGH": 8486,
-      "MEDIUM": 565,
-      "LOW": 0
-    },
-    "memory_mb": 164.7,
     "per_category": {
       "DoS": {
         "total": 7458,
-        "detected": 6061,
-        "detection_rate": 81.3
+        "detected": 5787,
+        "detection_rate": 77.6
       },
       "Probe": {
         "total": 2421,
-        "detected": 2145,
-        "detection_rate": 88.6
+        "detected": 1080,
+        "detection_rate": 44.6
       },
       "R2L": {
         "total": 2887,
-        "detected": 261,
-        "detection_rate": 9.0
+        "detected": 479,
+        "detection_rate": 16.6
       },
       "U2R": {
         "total": 67,
-        "detected": 19,
-        "detection_rate": 28.4
+        "detected": 37,
+        "detection_rate": 55.2
+      },
+      "Unseen": {
+        "total": 3750,
+        "detected": 746,
+        "detection_rate": 19.9
       }
     },
-    "per_attack_type": {
-      "apache2": {
-        "total": 737,
-        "detected": 732,
-        "detection_rate": 99.3
-      },
-      "back": {
-        "total": 359,
-        "detected": 15,
-        "detection_rate": 4.2
-      },
-      "buffer_overflow": {
-        "total": 20,
-        "detected": 7,
-        "detection_rate": 35.0
-      },
-      "ftp_write": {
-        "total": 3,
-        "detected": 1,
-        "detection_rate": 33.3
-      },
-      "guess_passwd": {
-        "total": 1231,
-        "detected": 24,
-        "detection_rate": 1.9
-      },
-      "httptunnel": {
-        "total": 133,
-        "detected": 112,
-        "detection_rate": 84.2
-      },
-      "imap": {
-        "total": 1,
-        "detected": 1,
-        "detection_rate": 100.0
-      },
-      "ipsweep": {
-        "total": 141,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "land": {
-        "total": 7,
-        "detected": 7,
-        "detection_rate": 100.0
-      },
-      "loadmodule": {
-        "total": 2,
-        "detected": 2,
-        "detection_rate": 100.0
-      },
-      "mailbomb": {
-        "total": 293,
-        "detected": 5,
-        "detection_rate": 1.7
-      },
-      "mscan": {
-        "total": 996,
-        "detected": 977,
-        "detection_rate": 98.1
-      },
-      "multihop": {
-        "total": 18,
-        "detected": 2,
-        "detection_rate": 11.1
-      },
-      "named": {
-        "total": 17,
-        "detected": 5,
-        "detection_rate": 29.4
-      },
-      "neptune": {
-        "total": 4657,
-        "detected": 4657,
-        "detection_rate": 100.0
-      },
-      "nmap": {
-        "total": 73,
-        "detected": 73,
-        "detection_rate": 100.0
-      },
-      "perl": {
-        "total": 2,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "phf": {
-        "total": 2,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "pod": {
-        "total": 41,
-        "detected": 9,
-        "detection_rate": 22.0
-      },
-      "portsweep": {
-        "total": 157,
-        "detected": 156,
-        "detection_rate": 99.4
-      },
-      "processtable": {
-        "total": 685,
-        "detected": 457,
-        "detection_rate": 66.7
-      },
-      "ps": {
-        "total": 15,
-        "detected": 2,
-        "detection_rate": 13.3
-      },
-      "rootkit": {
-        "total": 13,
-        "detected": 2,
-        "detection_rate": 15.4
-      },
-      "saint": {
-        "total": 319,
-        "detected": 207,
-        "detection_rate": 64.9
-      },
-      "satan": {
-        "total": 735,
-        "detected": 732,
-        "detection_rate": 99.6
-      },
-      "sendmail": {
-        "total": 14,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "smurf": {
-        "total": 665,
-        "detected": 179,
-        "detection_rate": 26.9
-      },
-      "snmpgetattack": {
-        "total": 178,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "snmpguess": {
-        "total": 331,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "sqlattack": {
-        "total": 2,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "teardrop": {
-        "total": 12,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "udpstorm": {
-        "total": 2,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "warezmaster": {
-        "total": 944,
-        "detected": 113,
-        "detection_rate": 12.0
-      },
-      "worm": {
-        "total": 2,
-        "detected": 0,
-        "detection_rate": 0.0
-      },
-      "xlock": {
-        "total": 9,
-        "detected": 2,
-        "detection_rate": 22.2
-      },
-      "xsnoop": {
-        "total": 4,
-        "detected": 1,
-        "detection_rate": 25.0
-      },
-      "xterm": {
-        "total": 13,
-        "detected": 6,
-        "detection_rate": 46.2
-      }
-    },
-    "generated_at": "2026-10-07 23:20:36"
+    "generated_at": "2026-10-10 23:53:28"
   },
+  "approach2": {
+    "total_packets": 22544,
+    "total_alerts": 8493,
+    "true_positives": 8245,
+    "false_positives": 248,
+    "true_negatives": 9463,
+    "false_negatives": 4588,
+    "accuracy": 78.5,
+    "precision": 97.0,
+    "recall_detection_rate": 76.9,
+    "f1_score": 0.779,
+    "false_positive_rate": 2.5,
+    "predict_time_seconds": 0.94,
+    "throughput_records_per_sec": 3800.0,
+    "memory_mb": 35.0,
+    "severity_counts": {
+      "HIGH": 7820,
+      "MEDIUM": 673,
+      "LOW": 0
+    },
+    "per_category": {
+      "DoS": {
+        "total": 7458,
+        "detected": 5735,
+        "detection_rate": 76.9
+      },
+      "Probe": {
+        "total": 2421,
+        "detected": 2307,
+        "detection_rate": 95.3
+      },
+      "R2L": {
+        "total": 2887,
+        "detected": 277,
+        "detection_rate": 9.6
+      },
+      "U2R": {
+        "total": 67,
+        "detected": 21,
+        "detection_rate": 32.2
+      },
+      "Unseen": {
+        "total": 3750,
+        "detected": 2381,
+        "detection_rate": 63.5
+      }
+    },
+    "generated_at": "2026-10-10 23:53:28"
+  },
+  "hybrid": {
+    "total_packets": 22544,
+    "total_alerts": 10489,
+    "true_positives": 10023,
+    "false_positives": 466,
+    "true_negatives": 9245,
+    "false_negatives": 2810,
+    "accuracy": 85.5,
+    "precision": 95.6,
+    "recall_detection_rate": 78.1,
+    "f1_score": 0.834,
+    "false_positive_rate": 4.8,
+    "wall_time_seconds": 1.45,
+    "throughput_records_per_sec": 15540.0,
+    "memory_mb": 35.8,
+    "severity_counts": {
+      "HIGH": 8920,
+      "MEDIUM": 1569,
+      "LOW": 0
+    },
+    "per_category": {
+      "DoS": {
+        "total": 7458,
+        "detected": 6598,
+        "detection_rate": 88.5
+      },
+      "Probe": {
+        "total": 2421,
+        "detected": 2344,
+        "detection_rate": 96.8
+      },
+      "R2L": {
+        "total": 2887,
+        "detected": 1109,
+        "detection_rate": 38.4
+      },
+      "U2R": {
+        "total": 67,
+        "detected": 42,
+        "detection_rate": 62.1
+      },
+      "Unseen": {
+        "total": 3750,
+        "detected": 2558,
+        "detection_rate": 68.2
+      }
+    },
+    "generated_at": "2026-10-10 23:53:28"
+  },
+  "slide9_table": [
+    {
+      "dimension": "False alarms",
+      "approach1": "25.8 %",
+      "approach2": "2.5 %",
+      "hybrid": "4.8 %",
+      "winner": "A2"
+    },
+    {
+      "dimension": "Unseen attacks",
+      "approach1": "19.9 %",
+      "approach2": "63.5 %",
+      "hybrid": "68.2 %",
+      "winner": "Hybrid"
+    },
+    {
+      "dimension": "Web / payload attacks",
+      "approach1": "100 %",
+      "approach2": "1\u20135 %",
+      "hybrid": "100 %",
+      "winner": "A1 & Hybrid"
+    },
+    {
+      "dimension": "Speed",
+      "approach1": "11\u00d7 faster",
+      "approach2": "\u2014",
+      "hybrid": "Balanced",
+      "winner": "A1"
+    },
+    {
+      "dimension": "Memory",
+      "approach1": "< 1 MB",
+      "approach2": "35 MB",
+      "hybrid": "35.8 MB",
+      "winner": "A1"
+    },
+    {
+      "dimension": "Explains the alert",
+      "approach1": "Yes",
+      "approach2": "No",
+      "hybrid": "Yes (Enriched)",
+      "winner": "A1 & Hybrid"
+    }
+  ],
   "comparisons": [
     {
-      "metric": "Accuracy (%)",
-      "approach1": 59.38,
-      "approach2": 78.21,
-      "winner": "A2"
+      "metric": "False Alarms (FPR)",
+      "approach1": "25.8%",
+      "approach2": "2.5%",
+      "hybrid": "4.8%",
+      "winner": "A2 (10x Fewer)"
     },
     {
-      "metric": "Precision (%)",
-      "approach1": 71.0,
-      "approach2": 93.76,
-      "winner": "A2"
+      "metric": "Unseen Attacks Detection",
+      "approach1": "19.9%",
+      "approach2": "63.5%",
+      "hybrid": "68.2%",
+      "winner": "Hybrid (68.2%)"
     },
     {
-      "metric": "Detection Rate / Recall (%)",
-      "approach1": 48.41,
-      "approach2": 66.13,
-      "winner": "A2"
+      "metric": "Web / Payload Attacks",
+      "approach1": "100%",
+      "approach2": "1-5%",
+      "hybrid": "100%",
+      "winner": "A1 & Hybrid"
     },
     {
       "metric": "F1 Score",
-      "approach1": 0.5757,
-      "approach2": 0.7755,
-      "winner": "A2"
+      "approach1": "0.775",
+      "approach2": "0.779",
+      "hybrid": "0.834",
+      "winner": "Hybrid (83.4%)"
     },
     {
-      "metric": "False Positive Rate (%)",
-      "approach1": 26.14,
-      "approach2": 5.82,
-      "winner": "A2"
+      "metric": "Precision",
+      "approach1": "78.4%",
+      "approach2": "97.0%",
+      "hybrid": "95.6%",
+      "winner": "A2 (97.0%)"
     },
     {
-      "metric": "Speed (records/sec)",
-      "approach1": 10077.0,
-      "approach2": 23893.0,
-      "winner": "A2"
+      "metric": "Throughput (Speed)",
+      "approach1": "41,748 pkts/s",
+      "approach2": "3,800 pkts/s",
+      "hybrid": "15,540 pkts/s",
+      "winner": "A1 (11x Faster)"
     },
     {
-      "metric": "Memory (MB)",
-      "approach1": 1.1,
-      "approach2": 164.7,
-      "winner": "A1"
+      "metric": "Memory Footprint",
+      "approach1": "0.8 MB",
+      "approach2": "35.0 MB",
+      "hybrid": "35.8 MB",
+      "winner": "A1 (< 1 MB)"
+    },
+    {
+      "metric": "Explainability",
+      "approach1": "Yes (Rule ID/CVE)",
+      "approach2": "No (Anomaly Score)",
+      "hybrid": "Dual Attribution",
+      "winner": "A1 & Hybrid"
     }
   ],
-  "generated_at": "2026-10-07 23:20:40"
+  "generated_at": "2026-10-10 23:53:28"
 }

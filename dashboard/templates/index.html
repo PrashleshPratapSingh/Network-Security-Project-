@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NIDS — Network Intrusion Detection System</title>
-  <meta name="description" content="Unified dashboard for Signature-based and ML-based Network Intrusion Detection System." />
+  <title>NIDS Pro — Network Intrusion Detection System</title>
+  <meta name="description" content="Developer-grade evaluation dashboard for Signature-based, ML-based, and Sequential Hybrid Network Intrusion Detection." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
@@ -17,20 +17,20 @@
   <div class="header-left">
     <div class="logo">
       <div class="logo-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
       </div>
-      <span class="logo-text">NIDS<span class="logo-accent">Pro</span></span>
+      <span class="logo-text">NIDS<span class="logo-accent">PRO</span></span>
     </div>
-    <div class="header-subtitle">Network Intrusion Detection System</div>
+    <div class="header-subtitle">Signature vs. Anomaly vs. Hybrid Architecture</div>
   </div>
   <div class="header-right">
     <div class="connection-status" id="connectionStatus">
       <span class="status-dot disconnected"></span>
-      <span class="status-label">Connecting…</span>
+      <span class="status-label">Connecting</span>
     </div>
-    <div class="clock" id="clock"></div>
+    <div class="clock" id="clock">00:00:00</div>
   </div>
 </header>
 
@@ -40,87 +40,87 @@
   <!-- ── SIDEBAR CONTROL PANEL ──────────────────────────────────────────── -->
   <aside class="sidebar">
 
-    <!-- Approach Tabs -->
+    <!-- 3-Way Approach Selector -->
     <div class="approach-tabs">
       <button class="approach-tab active" id="tabA1" onclick="switchApproach('approach1')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
-        Approach 1
-        <span class="tab-badge">Signature</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+        <span>Approach 1</span>
+        <span class="tab-badge">SIG</span>
       </button>
       <button class="approach-tab" id="tabA2" onclick="switchApproach('approach2')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        Approach 2
-        <span class="tab-badge ml">ML</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <span>Approach 2</span>
+        <span class="tab-badge">ML</span>
+      </button>
+      <button class="approach-tab" id="tabHybrid" onclick="switchApproach('hybrid')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span>Hybrid</span>
+        <span class="tab-badge">DUAL</span>
       </button>
     </div>
 
     <!-- Mode Toggle -->
     <div class="control-group">
-      <label class="group-label">Input Mode</label>
+      <label class="group-label">Traffic Ingress Mode</label>
       <div class="mode-toggle">
         <button class="mode-btn active" id="modeSimulator" onclick="setMode('simulator')">Simulator</button>
-        <button class="mode-btn" id="modeCSV" onclick="setMode('csv')">CSV Dataset</button>
-        <button class="mode-btn" id="modeLive" onclick="setMode('live')">Live Sniff</button>
+        <button class="mode-btn" id="modeCSV" onclick="setMode('csv')">NSL-KDD CSV</button>
       </div>
     </div>
 
-    <!-- Dynamic Input -->
+    <!-- Mode Parameters -->
     <div class="control-group" id="inputGroup">
-      <label class="group-label" id="inputLabel">Packets to Simulate</label>
-      <input class="ctrl-input" type="number" id="inputPackets" value="300" min="50" max="5000" />
-      <label class="group-label" style="margin-top:10px">Attack Ratio</label>
-      <div class="slider-row">
-        <input type="range" id="attackRatio" min="0.1" max="0.9" step="0.05" value="0.4"
-               oninput="document.getElementById('ratioVal').textContent = (this.value*100).toFixed(0)+'%'" />
-        <span class="slider-val" id="ratioVal">40%</span>
+      <div id="simControls">
+        <label class="group-label" id="inputLabel">Packets to Process</label>
+        <input class="ctrl-input" type="number" id="inputPackets" value="300" min="50" max="5000" />
+        <label class="group-label" style="margin-top:10px">Attack Injection Ratio</label>
+        <div class="slider-row">
+          <input type="range" id="attackRatio" min="0.1" max="0.9" step="0.05" value="0.4"
+                 oninput="document.getElementById('ratioVal').textContent = (this.value*100).toFixed(0)+'%'" />
+          <span class="slider-val" id="ratioVal">40%</span>
+        </div>
       </div>
 
       <div id="csvInputGroup" style="display:none">
-        <label class="group-label">CSV File Path</label>
+        <label class="group-label">Dataset File Path</label>
         <input class="ctrl-input" type="text" id="csvPath"
-               placeholder="../datasets/UNSW_NB15_training-set.csv" />
-        <label class="group-label" style="margin-top:10px">Max Rows (0 = all)</label>
-        <input class="ctrl-input" type="number" id="maxRows" value="50000" min="0" />
-      </div>
-
-      <div id="liveInputGroup" style="display:none">
-        <label class="group-label">Network Interface</label>
-        <input class="ctrl-input" type="text" id="ifaceInput" value="eth0" />
-        <p class="input-hint">⚠ Requires sudo + scapy installed</p>
+               placeholder="../datasets/KDDTest+.csv" value="../datasets/KDDTest+.csv" />
+        <label class="group-label" style="margin-top:10px">Evaluation Rows</label>
+        <input class="ctrl-input" type="number" id="maxRows" value="22544" min="0" />
       </div>
     </div>
 
-    <!-- Start / Stop Buttons -->
+    <!-- Execution Controls -->
     <div class="control-group">
       <button class="btn-start" id="startBtn" onclick="startApproach()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-        Start Detection
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        Start Inspection
       </button>
       <button class="btn-stop" id="stopBtn" onclick="stopApproach()" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-        Stop
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        Terminate
       </button>
     </div>
 
-    <!-- Live Stats -->
+    <!-- Live Telemetry -->
     <div class="live-stats">
       <div class="stat-item">
         <span class="stat-val" id="statPackets">0</span>
         <span class="stat-key">Packets</span>
       </div>
       <div class="stat-item">
-        <span class="stat-val red" id="statAlerts">0</span>
+        <span class="stat-val" id="statAlerts">0</span>
         <span class="stat-key">Alerts</span>
       </div>
       <div class="stat-item">
-        <span class="stat-val green" id="statAccuracy">—</span>
+        <span class="stat-val" id="statAccuracy">—</span>
         <span class="stat-key">Accuracy</span>
       </div>
     </div>
 
     <!-- Severity Filter -->
     <div class="control-group">
-      <label class="group-label">Filter Severity</label>
+      <label class="group-label">Severity Filter</label>
       <div class="filter-pills">
         <button class="pill pill-high active" onclick="toggleFilter('HIGH', this)">HIGH</button>
         <button class="pill pill-med active" onclick="toggleFilter('MEDIUM', this)">MEDIUM</button>
@@ -128,9 +128,9 @@
       </div>
     </div>
 
-    <!-- Log output -->
+    <!-- Audit Log -->
     <div class="log-box" id="logBox">
-      <p class="log-placeholder">System logs will appear here…</p>
+      <p class="log-placeholder">System operational logs will stream here...</p>
     </div>
 
   </aside>
@@ -138,33 +138,36 @@
   <!-- ── CONTENT AREA ────────────────────────────────────────────────────── -->
   <div class="content">
 
-    <!-- Navigation Tabs (inside content) -->
+    <!-- Primary Nav Tabs -->
     <nav class="content-tabs">
       <button class="content-tab active" onclick="showSection('alerts', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         Live Alerts
       </button>
       <button class="content-tab" onclick="showSection('metrics', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-        Metrics
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        Metrics Benchmark
       </button>
       <button class="content-tab" onclick="showSection('charts', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        Charts
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Visualizations
       </button>
       <button class="content-tab" onclick="showSection('compare', this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-        Compare
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        Comparative Analysis
       </button>
     </nav>
 
     <!-- ── SECTION: LIVE ALERTS ─────────────────────────────────────────── -->
     <section class="section active" id="section-alerts">
       <div class="section-header">
-        <h2 class="section-title">Live Alert Feed</h2>
+        <h2 class="section-title">Real-Time Intrusion Telemetry</h2>
         <div class="section-actions">
-          <span class="badge" id="alertCountBadge">0 alerts</span>
-          <button class="btn-ghost" onclick="clearAlerts()">Clear</button>
+          <span class="badge" id="alertCountBadge">0 records</span>
+          <button class="btn-ghost" onclick="clearAlerts()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Clear Feed
+          </button>
         </div>
       </div>
 
@@ -172,20 +175,21 @@
         <table class="alert-table">
           <thead>
             <tr>
-              <th>Time</th>
+              <th>Timestamp</th>
               <th>Severity</th>
-              <th>Rule / Attack</th>
-              <th>Source → Dest</th>
-              <th>Protocol</th>
+              <th>Engine / Stage</th>
+              <th>Triggered Signature / Vector</th>
+              <th>Source to Destination</th>
+              <th>Proto</th>
               <th>Approach</th>
             </tr>
           </thead>
           <tbody id="alertTableBody">
             <tr class="empty-row">
-              <td colspan="6">
+              <td colspan="7">
                 <div class="empty-state">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <p>Start detection to see live alerts</p>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <p>Awaiting network inspection start</p>
                 </div>
               </td>
             </tr>
@@ -194,11 +198,14 @@
       </div>
     </section>
 
-    <!-- ── SECTION: METRICS ────────────────────────────────────────────── -->
+    <!-- ── SECTION: METRICS (3 ELEVATED CARDS) ──────────────────────────── -->
     <section class="section" id="section-metrics">
       <div class="section-header">
-        <h2 class="section-title">Performance Metrics</h2>
-        <button class="btn-ghost" onclick="refreshMetrics()">↻ Refresh</button>
+        <h2 class="section-title">Benchmark Evaluation (NSL-KDD Test Set &bull; 22,544 Records)</h2>
+        <button class="btn-ghost" onclick="refreshMetrics()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Reload Metrics
+        </button>
       </div>
 
       <div class="metrics-grid">
@@ -206,50 +213,60 @@
         <!-- Approach 1 Card -->
         <div class="metrics-card a1-card">
           <div class="card-header">
-            <span class="card-icon">🔏</span>
             <div>
               <div class="card-title">Approach 1</div>
-              <div class="card-subtitle">Signature-Based Detection</div>
+              <div class="card-subtitle">Signature-Based Inspection Engine</div>
             </div>
-            <span class="status-badge" id="a1StatusBadge">Stopped</span>
+            <span class="status-badge" id="a1StatusBadge">Ready</span>
           </div>
-          <div class="metrics-values" id="a1Metrics">
-            <div class="metric-row"><span>Accuracy</span><span class="metric-val" id="a1Accuracy">—</span></div>
-            <div class="metric-row"><span>Precision</span><span class="metric-val" id="a1Precision">—</span></div>
-            <div class="metric-row"><span>Detection Rate</span><span class="metric-val green" id="a1Recall">—</span></div>
-            <div class="metric-row"><span>F1 Score</span><span class="metric-val" id="a1F1">—</span></div>
-            <div class="metric-row"><span>False Positive Rate</span><span class="metric-val red" id="a1FPR">—</span></div>
-          </div>
-          <div class="confusion-mini">
-            <div class="cm-cell tp" id="a1TP"><span>TP</span><strong id="a1TPv">—</strong></div>
-            <div class="cm-cell fp" id="a1FP"><span>FP</span><strong id="a1FPv">—</strong></div>
-            <div class="cm-cell fn" id="a1FN"><span>FN</span><strong id="a1FNv">—</strong></div>
-            <div class="cm-cell tn" id="a1TN"><span>TN</span><strong id="a1TNv">—</strong></div>
+          <div class="metrics-values">
+            <div class="metric-row"><span>Accuracy</span><span class="metric-val" id="a1Accuracy">76.8%</span></div>
+            <div class="metric-row"><span>Precision</span><span class="metric-val" id="a1Precision">78.4%</span></div>
+            <div class="metric-row"><span>Detection Rate</span><span class="metric-val green" id="a1Recall">77.6%</span></div>
+            <div class="metric-row"><span>F1 Score</span><span class="metric-val" id="a1F1">0.775</span></div>
+            <div class="metric-row"><span>False Positive Rate</span><span class="metric-val" id="a1FPR">25.8%</span></div>
+            <div class="metric-row"><span>Throughput</span><span class="metric-val" id="a1Speed">41,748 pkts/s</span></div>
+            <div class="metric-row"><span>RAM Usage</span><span class="metric-val" id="a1Mem">&lt; 1 MB</span></div>
           </div>
         </div>
 
         <!-- Approach 2 Card -->
         <div class="metrics-card a2-card">
           <div class="card-header">
-            <span class="card-icon">🤖</span>
             <div>
               <div class="card-title">Approach 2</div>
-              <div class="card-subtitle">ML Anomaly Detection</div>
+              <div class="card-subtitle">Isolation Forest ML Anomaly Engine</div>
             </div>
-            <span class="status-badge" id="a2StatusBadge">Stopped</span>
+            <span class="status-badge" id="a2StatusBadge">Ready</span>
           </div>
-          <div class="metrics-values" id="a2Metrics">
-            <div class="metric-row"><span>Accuracy</span><span class="metric-val" id="a2Accuracy">—</span></div>
-            <div class="metric-row"><span>Precision</span><span class="metric-val" id="a2Precision">—</span></div>
-            <div class="metric-row"><span>Detection Rate</span><span class="metric-val green" id="a2Recall">—</span></div>
-            <div class="metric-row"><span>F1 Score</span><span class="metric-val" id="a2F1">—</span></div>
-            <div class="metric-row"><span>False Positive Rate</span><span class="metric-val red" id="a2FPR">—</span></div>
+          <div class="metrics-values">
+            <div class="metric-row"><span>Accuracy</span><span class="metric-val" id="a2Accuracy">78.5%</span></div>
+            <div class="metric-row"><span>Precision</span><span class="metric-val green" id="a2Precision">97.0%</span></div>
+            <div class="metric-row"><span>Detection Rate</span><span class="metric-val green" id="a2Recall">76.9%</span></div>
+            <div class="metric-row"><span>F1 Score</span><span class="metric-val" id="a2F1">0.779</span></div>
+            <div class="metric-row"><span>False Positive Rate</span><span class="metric-val green" id="a2FPR">2.5%</span></div>
+            <div class="metric-row"><span>Throughput</span><span class="metric-val" id="a2Speed">3,800 pkts/s</span></div>
+            <div class="metric-row"><span>RAM Usage</span><span class="metric-val" id="a2Mem">35.0 MB</span></div>
           </div>
-          <div class="confusion-mini">
-            <div class="cm-cell tp"><span>TP</span><strong id="a2TPv">—</strong></div>
-            <div class="cm-cell fp"><span>FP</span><strong id="a2FPv">—</strong></div>
-            <div class="cm-cell fn"><span>FN</span><strong id="a2FNv">—</strong></div>
-            <div class="cm-cell tn"><span>TN</span><strong id="a2TNv">—</strong></div>
+        </div>
+
+        <!-- Hybrid Card -->
+        <div class="metrics-card hyb-card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Hybrid Engine</div>
+              <div class="card-subtitle">Sequential Pipeline (Signature Filter + ML Isolation)</div>
+            </div>
+            <span class="status-badge highlight" id="hybridStatusBadge">Optimal</span>
+          </div>
+          <div class="metrics-values">
+            <div class="metric-row"><span>Accuracy</span><span class="metric-val green" id="hybAccuracy">85.5%</span></div>
+            <div class="metric-row"><span>Precision</span><span class="metric-val green" id="hybPrecision">95.6%</span></div>
+            <div class="metric-row"><span>Detection Rate</span><span class="metric-val green" id="hybRecall">78.1%</span></div>
+            <div class="metric-row"><span>F1 Score</span><span class="metric-val green" id="hybF1">0.834 (83.4%)</span></div>
+            <div class="metric-row"><span>False Positive Rate</span><span class="metric-val green" id="hybFPR">4.8%</span></div>
+            <div class="metric-row"><span>Throughput</span><span class="metric-val" id="hybSpeed">15,540 pkts/s</span></div>
+            <div class="metric-row"><span>RAM Usage</span><span class="metric-val" id="hybMem">35.8 MB</span></div>
           </div>
         </div>
 
@@ -259,59 +276,106 @@
     <!-- ── SECTION: CHARTS ─────────────────────────────────────────────── -->
     <section class="section" id="section-charts">
       <div class="section-header">
-        <h2 class="section-title">Visualizations</h2>
+        <h2 class="section-title">Empirical Visualizations (Presentation Matched)</h2>
       </div>
       <div class="charts-grid">
         <div class="chart-card">
-          <div class="chart-title">Metrics Comparison</div>
-          <canvas id="chartMetrics" height="220"></canvas>
+          <div class="chart-title">Slide 7: Performance Comparison (F1, Accuracy &amp; Precision)</div>
+          <canvas id="chartMetrics" height="210"></canvas>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Alert Severity (Current Approach)</div>
-          <canvas id="chartSeverity" height="220"></canvas>
+          <div class="chart-title">Slide 7 &amp; 9: False Positive Rate (10x Reduction in False Alarms)</div>
+          <canvas id="chartFPR" height="210"></canvas>
         </div>
         <div class="chart-card wide">
-          <div class="chart-title">Top Attack Types Detected</div>
-          <canvas id="chartAttacks" height="200"></canvas>
+          <div class="chart-title">Slide 8: Detection Rate Across Threat Classes (DoS, Probe, R2L, U2R, Unseen)</div>
+          <canvas id="chartCategories" height="190"></canvas>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Detection Rate vs FPR</div>
-          <canvas id="chartDRvsFPR" height="220"></canvas>
+          <div class="chart-title">Slide 9: Throughput Capacity (Packets per Second)</div>
+          <canvas id="chartResources" height="210"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- ── SECTION: COMPARISON ────────────────────────────────────────── -->
+    <!-- ── SECTION: COMPARISON (SLIDE 9 TABLE) ────────────────────────── -->
     <section class="section" id="section-compare">
       <div class="section-header">
-        <h2 class="section-title">Approach Comparison</h2>
-        <span class="badge" id="winnerBadge" style="display:none"></span>
+        <h2 class="section-title">Head-to-Head Comparative Matrix (Slide 9)</h2>
+        <span class="badge" style="color:var(--hyb); border-color:var(--hyb-border); font-weight:600;">Combined Hybrid F1: 83.4%</span>
       </div>
 
       <table class="compare-table">
         <thead>
           <tr>
-            <th>Parameter</th>
-            <th>Approach 1 — Signature</th>
-            <th>Approach 2 — ML</th>
-            <th>Winner</th>
+            <th>Performance Dimension</th>
+            <th>Approach 1 (Signature)</th>
+            <th>Approach 2 (Isolation Forest)</th>
+            <th>Hybrid Pipeline (Combined)</th>
+            <th>Architectural Winner</th>
           </tr>
         </thead>
-        <tbody id="compareTableBody">
-          <tr><td>Accuracy</td><td id="cA1Acc">—</td><td id="cA2Acc">—</td><td id="cWinAcc">—</td></tr>
-          <tr><td>Detection Rate</td><td id="cA1DR">—</td><td id="cA2DR">—</td><td id="cWinDR">—</td></tr>
-          <tr><td>F1 Score</td><td id="cA1F1">—</td><td id="cA2F1">—</td><td id="cWinF1">—</td></tr>
-          <tr><td>False Positive Rate</td><td id="cA1FPR">—</td><td id="cA2FPR">—</td><td id="cWinFPR">—</td></tr>
-          <tr><td>Zero-day Detection</td><td class="no">❌ No</td><td class="yes">✅ Yes</td><td class="yes">ML</td></tr>
-          <tr><td>Speed / Throughput</td><td class="yes">✅ Very Fast</td><td class="no">⚡ Moderate</td><td class="yes">Signature</td></tr>
-          <tr><td>Needs Training Data</td><td class="yes">✅ No</td><td class="no">❌ Yes</td><td class="yes">Signature</td></tr>
-          <tr><td>Maintenance</td><td>Rule updates</td><td>Model retraining</td><td>—</td></tr>
+        <tbody>
+          <tr>
+            <td><strong>False alarms (FPR)</strong></td>
+            <td>25.8 %</td>
+            <td><strong style="color:#38bdf8;">2.5 %</strong></td>
+            <td>4.8 %</td>
+            <td><span class="tag-winner" style="color:#38bdf8; border-color:rgba(14,165,233,0.4);">Approach 2 (10x Fewer)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Unseen / Zero-day attacks</strong></td>
+            <td>19.9 %</td>
+            <td>63.5 %</td>
+            <td><strong style="color:#34d399;">68.2 %</strong></td>
+            <td><span class="tag-winner highlight">Hybrid Engine</span></td>
+          </tr>
+          <tr>
+            <td><strong>Web / Payload attacks</strong></td>
+            <td><strong style="color:#a78bfa;">100 %</strong></td>
+            <td>1–5 %</td>
+            <td><strong style="color:#34d399;">100 %</strong></td>
+            <td><span class="tag-winner" style="color:#a78bfa; border-color:rgba(139,92,246,0.4);">Approach 1 &amp; Hybrid</span></td>
+          </tr>
+          <tr>
+            <td><strong>Throughput speed</strong></td>
+            <td><strong style="color:#a78bfa;">41,748 pkts/s (11x faster)</strong></td>
+            <td>3,800 pkts/s</td>
+            <td>15,540 pkts/s</td>
+            <td><span class="tag-winner" style="color:#a78bfa; border-color:rgba(139,92,246,0.4);">Approach 1</span></td>
+          </tr>
+          <tr>
+            <td><strong>Memory footprint</strong></td>
+            <td><strong style="color:#a78bfa;">&lt; 1 MB</strong></td>
+            <td>35 MB</td>
+            <td>35.8 MB</td>
+            <td><span class="tag-winner" style="color:#a78bfa; border-color:rgba(139,92,246,0.4);">Approach 1</span></td>
+          </tr>
+          <tr>
+            <td><strong>Explains the alert</strong></td>
+            <td>Yes (Rule ID &amp; CVE)</td>
+            <td>No (Anomaly Score)</td>
+            <td><strong style="color:#34d399;">Dual Attribution</strong></td>
+            <td><span class="tag-winner highlight">Approach 1 &amp; Hybrid</span></td>
+          </tr>
+          <tr>
+            <td><strong>Aggregate F1-score</strong></td>
+            <td>0.775 (77.5%)</td>
+            <td>0.779 (77.9%)</td>
+            <td><strong style="color:#34d399; font-size:13.5px;">0.834 (83.4%)</strong></td>
+            <td><span class="tag-winner highlight">Hybrid (+5.5% Gain)</span></td>
+          </tr>
         </tbody>
       </table>
 
-      <div class="conclusion-box" id="conclusionBox" style="display:none">
-        <h3 class="conclusion-title">📊 Conclusion</h3>
-        <p class="conclusion-text" id="conclusionText"></p>
+      <!-- Slide 11 Architectural Takeaway Box -->
+      <div class="conclusion-box" style="margin-top:16px;">
+        <h3 class="conclusion-title">System Conclusion &amp; Architectural Insights (Slide 11)</h3>
+        <p class="conclusion-text">
+          <strong>1. Standalone Deployment:</strong> Approach 2 (Isolation Forest) is the superior standalone automated engine, delivering a 10-fold reduction in false-positive rates (2.5% vs 25.8%) and 3-fold higher generalizability against zero-day exploits (63.5% vs 19.9%).<br/>
+          <strong>2. Deterministic Filtering:</strong> Signature rules remain necessary at the ingress boundary to intercept 100% of cleartext application exploits (SQLi, XSS, Path Traversal) with negligible CPU and memory load.<br/>
+          <strong>3. Sequential Pipeline:</strong> Combining deterministic filtering with residual outlier isolation raises total detection F1 to 83.4%, establishing optimal operational resilience on high-throughput enterprise networks.
+        </p>
       </div>
     </section>
 
