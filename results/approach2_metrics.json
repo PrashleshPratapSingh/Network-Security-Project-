@@ -1,0 +1,231 @@
+{
+  "total_packets": 22544,
+  "total_alerts": 9051,
+  "true_positives": 8486,
+  "false_positives": 565,
+  "true_negatives": 9146,
+  "false_negatives": 4347,
+  "accuracy": 78.21,
+  "precision": 93.76,
+  "recall_detection_rate": 66.13,
+  "f1_score": 0.7755,
+  "false_positive_rate": 5.82,
+  "predict_time_seconds": 0.94,
+  "throughput_records_per_sec": 23893.0,
+  "severity_counts": {
+    "HIGH": 8486,
+    "MEDIUM": 565,
+    "LOW": 0
+  },
+  "memory_mb": 164.7,
+  "per_category": {
+    "DoS": {
+      "total": 7458,
+      "detected": 6061,
+      "detection_rate": 81.3
+    },
+    "Probe": {
+      "total": 2421,
+      "detected": 2145,
+      "detection_rate": 88.6
+    },
+    "R2L": {
+      "total": 2887,
+      "detected": 261,
+      "detection_rate": 9.0
+    },
+    "U2R": {
+      "total": 67,
+      "detected": 19,
+      "detection_rate": 28.4
+    }
+  },
+  "per_attack_type": {
+    "apache2": {
+      "total": 737,
+      "detected": 732,
+      "detection_rate": 99.3
+    },
+    "back": {
+      "total": 359,
+      "detected": 15,
+      "detection_rate": 4.2
+    },
+    "buffer_overflow": {
+      "total": 20,
+      "detected": 7,
+      "detection_rate": 35.0
+    },
+    "ftp_write": {
+      "total": 3,
+      "detected": 1,
+      "detection_rate": 33.3
+    },
+    "guess_passwd": {
+      "total": 1231,
+      "detected": 24,
+      "detection_rate": 1.9
+    },
+    "httptunnel": {
+      "total": 133,
+      "detected": 112,
+      "detection_rate": 84.2
+    },
+    "imap": {
+      "total": 1,
+      "detected": 1,
+      "detection_rate": 100.0
+    },
+    "ipsweep": {
+      "total": 141,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "land": {
+      "total": 7,
+      "detected": 7,
+      "detection_rate": 100.0
+    },
+    "loadmodule": {
+      "total": 2,
+      "detected": 2,
+      "detection_rate": 100.0
+    },
+    "mailbomb": {
+      "total": 293,
+      "detected": 5,
+      "detection_rate": 1.7
+    },
+    "mscan": {
+      "total": 996,
+      "detected": 977,
+      "detection_rate": 98.1
+    },
+    "multihop": {
+      "total": 18,
+      "detected": 2,
+      "detection_rate": 11.1
+    },
+    "named": {
+      "total": 17,
+      "detected": 5,
+      "detection_rate": 29.4
+    },
+    "neptune": {
+      "total": 4657,
+      "detected": 4657,
+      "detection_rate": 100.0
+    },
+    "nmap": {
+      "total": 73,
+      "detected": 73,
+      "detection_rate": 100.0
+    },
+    "perl": {
+      "total": 2,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "phf": {
+      "total": 2,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "pod": {
+      "total": 41,
+      "detected": 9,
+      "detection_rate": 22.0
+    },
+    "portsweep": {
+      "total": 157,
+      "detected": 156,
+      "detection_rate": 99.4
+    },
+    "processtable": {
+      "total": 685,
+      "detected": 457,
+      "detection_rate": 66.7
+    },
+    "ps": {
+      "total": 15,
+      "detected": 2,
+      "detection_rate": 13.3
+    },
+    "rootkit": {
+      "total": 13,
+      "detected": 2,
+      "detection_rate": 15.4
+    },
+    "saint": {
+      "total": 319,
+      "detected": 207,
+      "detection_rate": 64.9
+    },
+    "satan": {
+      "total": 735,
+      "detected": 732,
+      "detection_rate": 99.6
+    },
+    "sendmail": {
+      "total": 14,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "smurf": {
+      "total": 665,
+      "detected": 179,
+      "detection_rate": 26.9
+    },
+    "snmpgetattack": {
+      "total": 178,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "snmpguess": {
+      "total": 331,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "sqlattack": {
+      "total": 2,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "teardrop": {
+      "total": 12,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "udpstorm": {
+      "total": 2,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "warezmaster": {
+      "total": 944,
+      "detected": 113,
+      "detection_rate": 12.0
+    },
+    "worm": {
+      "total": 2,
+      "detected": 0,
+      "detection_rate": 0.0
+    },
+    "xlock": {
+      "total": 9,
+      "detected": 2,
+      "detection_rate": 22.2
+    },
+    "xsnoop": {
+      "total": 4,
+      "detected": 1,
+      "detection_rate": 25.0
+    },
+    "xterm": {
+      "total": 13,
+      "detected": 6,
+      "detection_rate": 46.2
+    }
+  },
+  "generated_at": "2026-10-07 23:20:36"
+}

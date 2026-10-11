@@ -21,7 +21,10 @@ A1_DIR       = os.path.join(PROJECT_DIR, "approach1-signature")
 RESULTS_DIR  = os.path.join(PROJECT_DIR, "results")
 DATASETS_DIR = os.path.join(PROJECT_DIR, "datasets")
 
+A2_DIR       = os.path.join(PROJECT_DIR, "approach2-anomaly")
+
 sys.path.insert(0, A1_DIR)
+sys.path.insert(0, A2_DIR)
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.config["SECRET_KEY"] = "nids-dashboard-key"
@@ -208,6 +211,258 @@ def _run_csv(state, logger, stop_ev, opts):
                 "message": f"[CSV] Done — {count} rows processed."})
 
 
+# ── Approach 2 — ML Anomaly Detection thread ──────────────────────────────
+
+def _run_approach2_thread(mode: str, opts: dict):
+    """Run Approach 2 inside a thread and push alerts directly to SSE."""
+    state = _state["approach2"]
+    stop_ev = _stop_events["approach2"]
+    stop_ev.clear()
+
+    _broadcast({"type": "status", "approach": "approach2", "status": "running"})
+
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    from anomaly_detector import AnomalyDetector, MODEL_PATH
+    from feature_extractor import prepare_training_data, load_encoders
+
+    contamination = float(opts.get("contamination", 0.05))
+    detector = AnomalyDetector(contamination=contamination, n_estimators=100)
+
+    if not os.path.isfile(MODEL_PATH):
+        _broadcast({"type": "log", "approach": "approach2",
+                    "message": "[Approach 2] No trained model found — training Isolation Forest on normal traffic..."})
+        X_train, encoders = prepare_training_data()
+        detector.train(X_train)
+        _broadcast({"type": "log", "approach": "approach2",
+                    "message": "[Approach 2] Model training complete!"})
+    else:
+        detector.load()
+        encoders = load_encoders()
+
+    if mode == "simulator":
+        _run_approach2_simulator(state, detector, encoders, stop_ev, opts)
+    elif mode == "csv":
+        _run_approach2_csv(state, detector, encoders, stop_ev, opts)
+
+    # Save metrics
+    metrics = state.get("metrics", {})
+    if metrics:
+        path = os.path.join(RESULTS_DIR, "approach2_metrics.json")
+        with open(path, "w") as f:
+            json.dump(metrics, f, indent=2)
+
+    state["status"] = "done"
+    _broadcast({"type": "metrics_final", "approach": "approach2", "metrics": metrics})
+    _broadcast({"type": "status", "approach": "approach2", "status": "done",
+                "metrics": metrics})
+
+
+def _run_approach2_simulator(state, detector, encoders, stop_ev, opts):
+    """Run Approach 2 evaluation on simulated / sampled NSL-KDD test traffic."""
+    import random
+    import pandas as pd
+    from feature_extractor import TEST_CSV, transform_features
+
+    n_packets    = int(opts.get("packets", 300))
+    attack_ratio = float(opts.get("attack_ratio", 0.40))
+
+    _broadcast({"type": "log", "approach": "approach2",
+                "message": f"[ML Simulator] Evaluating {n_packets} test samples with Isolation Forest..."})
+
+    if not os.path.isfile(TEST_CSV):
+        _broadcast({"type": "log", "approach": "approach2",
+                    "message": f"[ERROR] NSL-KDD test set not found: {TEST_CSV}"})
+        return
+
+    df_test = pd.read_csv(TEST_CSV, low_memory=False)
+    df_normal = df_test[df_test["label"] == 0]
+    df_attack = df_test[df_test["label"] == 1]
+
+    n_attacks = int(n_packets * attack_ratio)
+    n_normals = n_packets - n_attacks
+
+    sampled_attack = df_attack.sample(n=min(n_attacks, len(df_attack)), replace=True)
+    sampled_normal = df_normal.sample(n=min(n_normals, len(df_normal)), replace=True)
+    df_sample = pd.concat([sampled_attack, sampled_normal]).sample(frac=1.0).reset_index(drop=True)
+
+    X_sample = transform_features(df_sample, encoders)
+    y_true = df_sample["label"].values.astype(int)
+    attack_types = df_sample["attack_type"].values if "attack_type" in df_sample.columns else ["attack"] * len(df_sample)
+    services = df_sample["service"].values if "service" in df_sample.columns else ["http"] * len(df_sample)
+    protocols = df_sample["protocol_type"].values if "protocol_type" in df_sample.columns else ["tcp"] * len(df_sample)
+
+    scores = detector.predict_scores(X_sample)
+    preds = detector.predict(X_sample)
+
+    tp = fp = tn = fn = 0
+
+    for i in range(len(df_sample)):
+        if stop_ev.is_set():
+            break
+
+        gt = int(y_true[i])
+        pred = int(preds[i])
+        score = float(scores[i])
+        atk_type = str(attack_types[i])
+        svc = str(services[i])
+        proto = str(protocols[i]).upper()
+
+        src_ip = f"192.168.1.{random.randint(10, 199)}"
+        dst_ip = f"10.0.0.{random.randint(1, 50)}"
+
+        if pred == 1 and gt == 1:
+            tp += 1
+        elif pred == 1 and gt == 0:
+            fp += 1
+        elif pred == 0 and gt == 0:
+            tn += 1
+        elif pred == 0 and gt == 1:
+            fn += 1
+
+        if pred == 1:
+            severity = "HIGH" if score < -0.10 else "MEDIUM"
+            rule_name = f"Anomaly: {atk_type.capitalize()}" if gt == 1 else "Anomaly: Outlier"
+            alert = {
+                "timestamp": time.strftime("%H:%M:%S"),
+                "severity": severity,
+                "rule": rule_name,
+                "signature_id": 90000 + (hash(atk_type) % 9999),
+                "src_dst": f"{src_ip} -> {dst_ip} ({svc})",
+                "protocol": proto,
+                "details": f"Anomaly score: {score:.4f}",
+                "approach": "approach2",
+            }
+            state["alerts"].append(alert)
+            _broadcast({"type": "alert", "approach": "approach2", "alert": alert})
+
+        if (i + 1) % 25 == 0 or (i + 1) == len(df_sample):
+            precision = round((tp / (tp + fp) * 100), 2) if (tp + fp) > 0 else 0.0
+            recall = round((tp / (tp + fn) * 100), 2) if (tp + fn) > 0 else 0.0
+            accuracy = round(((tp + tn) / (i + 1) * 100), 2)
+            f1 = round((2 * (precision/100) * (recall/100) / ((precision/100) + (recall/100))), 4) if (precision + recall) > 0 else 0.0
+            fpr = round((fp / (fp + tn) * 100), 2) if (fp + tn) > 0 else 0.0
+
+            m = {
+                "total_packets": i + 1,
+                "total_alerts": tp + fp,
+                "true_positives": tp,
+                "false_positives": fp,
+                "true_negatives": tn,
+                "false_negatives": fn,
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall_detection_rate": recall,
+                "f1_score": f1,
+                "false_positive_rate": fpr,
+            }
+            state["metrics"] = m
+            _broadcast({"type": "metrics", "approach": "approach2", "metrics": m,
+                        "progress": i + 1, "total": len(df_sample)})
+
+        time.sleep(0.015)
+
+    _broadcast({"type": "log", "approach": "approach2",
+                "message": f"[ML Simulator] Done — {len(df_sample)} samples evaluated."})
+
+
+def _run_approach2_csv(state, detector, encoders, stop_ev, opts):
+    """Run Approach 2 CSV evaluation."""
+    import pandas as pd
+    from feature_extractor import transform_features, TEST_CSV
+
+    csv_path = opts.get("input") or TEST_CSV
+    max_rows = int(opts.get("max_rows", 0))
+
+    if not os.path.isfile(csv_path):
+        _broadcast({"type": "log", "approach": "approach2",
+                    "message": f"[ERROR] CSV not found: {csv_path}"})
+        return
+
+    _broadcast({"type": "log", "approach": "approach2",
+                "message": f"[ML CSV] Loading: {os.path.basename(csv_path)}"})
+
+    df = pd.read_csv(csv_path, low_memory=False)
+    if max_rows and len(df) > max_rows:
+        df = df.iloc[:max_rows]
+
+    X = transform_features(df, encoders)
+    y_true = df["label"].values.astype(int) if "label" in df.columns else [0] * len(df)
+    attack_types = df["attack_type"].values if "attack_type" in df.columns else ["unknown"] * len(df)
+    services = df["service"].values if "service" in df.columns else ["http"] * len(df)
+    protocols = df["protocol_type"].values if "protocol_type" in df.columns else ["tcp"] * len(df)
+
+    scores = detector.predict_scores(X)
+    preds = detector.predict(X)
+
+    tp = fp = tn = fn = 0
+    total = len(df)
+
+    for i in range(total):
+        if stop_ev.is_set():
+            break
+
+        gt = int(y_true[i])
+        pred = int(preds[i])
+        score = float(scores[i])
+        atk_type = str(attack_types[i])
+        svc = str(services[i])
+        proto = str(protocols[i]).upper()
+
+        if pred == 1 and gt == 1:
+            tp += 1
+        elif pred == 1 and gt == 0:
+            fp += 1
+        elif pred == 0 and gt == 0:
+            tn += 1
+        elif pred == 0 and gt == 1:
+            fn += 1
+
+        if pred == 1:
+            severity = "HIGH" if score < -0.10 else "MEDIUM"
+            rule_name = f"Anomaly: {atk_type.capitalize()}" if gt == 1 else "Anomaly: Outlier"
+            alert = {
+                "timestamp": time.strftime("%H:%M:%S"),
+                "severity": severity,
+                "rule": rule_name,
+                "signature_id": 90000 + (hash(atk_type) % 9999),
+                "src_dst": f"NSL-KDD Row {i+1} ({svc})",
+                "protocol": proto,
+                "details": f"Anomaly score: {score:.4f}",
+                "approach": "approach2",
+            }
+            state["alerts"].append(alert)
+            _broadcast({"type": "alert", "approach": "approach2", "alert": alert})
+
+        if (i + 1) % 25 == 0 or (i + 1) == total:
+            precision = round((tp / (tp + fp) * 100), 2) if (tp + fp) > 0 else 0.0
+            recall = round((tp / (tp + fn) * 100), 2) if (tp + fn) > 0 else 0.0
+            accuracy = round(((tp + tn) / (i + 1) * 100), 2)
+            f1 = round((2 * (precision/100) * (recall/100) / ((precision/100) + (recall/100))), 4) if (precision + recall) > 0 else 0.0
+            fpr = round((fp / (fp + tn) * 100), 2) if (fp + tn) > 0 else 0.0
+
+            m = {
+                "total_packets": i + 1,
+                "total_alerts": tp + fp,
+                "true_positives": tp,
+                "false_positives": fp,
+                "true_negatives": tn,
+                "false_negatives": fn,
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall_detection_rate": recall,
+                "f1_score": f1,
+                "false_positive_rate": fpr,
+            }
+            state["metrics"] = m
+            _broadcast({"type": "metrics", "approach": "approach2", "metrics": m,
+                        "progress": i + 1, "total": total})
+
+        time.sleep(0.005)
+
+    _broadcast({"type": "log", "approach": "approach2",
+                "message": f"[ML CSV] Done — {total} rows evaluated."})
+
+
 # ── REST API ──────────────────────────────────────────────────────────────────
 
 @app.route("/")
@@ -260,9 +515,9 @@ def api_start(approach):
         t.start()
         return jsonify({"status": "started"})
     else:
-        # Approach 2 not built yet
-        _state[approach]["status"] = "error"
-        return jsonify({"error": "Approach 2 not built yet — coming soon!"}), 501
+        t = threading.Thread(target=_run_approach2_thread, args=(mode, data), daemon=True)
+        t.start()
+        return jsonify({"status": "started"})
 
 
 @app.route("/api/<approach>/stop", methods=["POST"])

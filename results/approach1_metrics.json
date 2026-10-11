@@ -1,19 +1,22 @@
 {
-  "total_packets": 300,
-  "total_alerts": 147,
-  "true_positives": 97,
-  "false_positives": 50,
-  "true_negatives": 118,
-  "false_negatives": 35,
-  "accuracy": 71.67,
-  "precision": 65.99,
-  "recall_detection_rate": 73.48,
-  "f1_score": 0.6953,
-  "false_positive_rate": 29.76,
+  "total_packets": 22544,
+  "total_alerts": 8751,
+  "true_positives": 6213,
+  "false_positives": 2538,
+  "true_negatives": 7173,
+  "false_negatives": 6620,
+  "accuracy": 59.38,
+  "precision": 71.0,
+  "recall_detection_rate": 48.41,
+  "f1_score": 0.5757,
+  "false_positive_rate": 26.14,
+  "wall_time_seconds": 2.24,
+  "throughput_records_per_sec": 10077.0,
+  "memory_mb": 1.1,
   "severity_counts": {
-    "HIGH": 72,
-    "MEDIUM": 75,
+    "HIGH": 7440,
+    "MEDIUM": 5041,
     "LOW": 0
   },
-  "generated_at": "2026-09-20 23:44:43"
+  "generated_at": "2026-10-07 23:20:26"
 }

@@ -1,0 +1,11 @@
+# Approach 2 — ML Anomaly-Based NIDS Dependencies
+# Install:
+#   pip install scikit-learn pandas numpy matplotlib seaborn joblib psutil
+
+scikit-learn>=1.3.0     # Isolation Forest model
+pandas>=2.0.0           # Data loading and manipulation
+numpy>=1.24.0           # Numerical operations
+matplotlib>=3.7.0       # Chart generation
+seaborn>=0.12.0         # Styled charts
+joblib>=1.3.0           # Model serialization
+psutil>=5.9.0           # CPU/memory monitoring
